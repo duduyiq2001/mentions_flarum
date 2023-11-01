@@ -27,10 +27,11 @@ export default class MentionableModels {
     console.log(this.mentionables);
 
     for (const mentionable of this.mentionables) {
-      if (mentionable.type() != 'workflow') {
+      if (mentionable.type() != 'resource') {
         this.results[mentionable.type()] = new Map(mentionable.initialResults().map((result) => [result.id() as string, result]));
       } else {
         this.results[mentionable.type()] = new Map();
+        this.results[mentionable.type()].set('workflow', { 1: 'workflow' });
       }
     }
   }
@@ -49,10 +50,9 @@ export default class MentionableModels {
     for (const mentionable of this.mentionables!) {
       //if workflow then skip
       console.log('{ebjdbjededed');
-      if (mentionable.type() == 'workflow' || 'project') {
-        this.results[mentionable.type()].set('workflow', typedLower);
-      } else {
-        for (const model of await mentionable.search(typedLower)) {
+
+      for (const model of await mentionable.search(typedLower)) {
+        if (mentionable.type() != 'resource') {
           if (!this.results[mentionable.type()].has(model.id() as string)) {
             this.results[mentionable.type()].set(model.id() as string, model);
           }
@@ -73,27 +73,39 @@ export default class MentionableModels {
   public makeSuggestion(mentionable: MentionableModel, model: Model): Mithril.Children {
     // console.log('xwmksmslmls');
     const content = mentionable.suggestion(model, this.typed!);
-    const replacement = mentionable.replacement(model);
+    if (mentionable.type() != 'resource') {
+      const replacement = mentionable.replacement(model);
 
-    const { onclick, ...attrs } = this.dropdownItemAttrs;
+      const { onclick, ...attrs } = this.dropdownItemAttrs;
 
-    return (
-      <MentionsDropdownItem mentionable={mentionable} onclick={() => onclick(replacement)} {...attrs}>
-        {content}
-      </MentionsDropdownItem>
-    );
+      return (
+        <MentionsDropdownItem mentionable={mentionable} onclick={() => onclick(replacement)} {...attrs}>
+          {content}
+        </MentionsDropdownItem>
+      );
+    } else {
+      const replacement = mentionable.replacement1(this.typed);
+      const { onclick, ...attrs } = this.dropdownItemAttrs;
+
+      return (
+        <MentionsDropdownItem mentionable={mentionable} onclick={() => onclick(replacement)} {...attrs}>
+          {content}
+        </MentionsDropdownItem>
+      );
+    }
   }
 
   public buildSuggestions(): Mithril.Children {
     const suggestions: Mithril.Children = [];
-    console.log('wnkjdwd');
-    console.log('this.results', this.results);
+    //console.log('wnkjdwd');
+    //console.log('this.results', this.results);
     for (const mentionable of this.mentionables!) {
       if (!mentionable.enabled()) continue;
-      console.log(mentionable);
-      if (mentionable.type() != 'workflow') {
+      //console.log(mentionable);
+      if (mentionable.type() != 'resource') {
         let matches = Array.from(this.results[mentionable.type()].values()).filter((model) => this.matches(mentionable, model));
-        console.log(matches);
+        console.log('types are', mentionable.type());
+        console.log('matches are', matches);
         const max = mentionable.maxStoreMatchedResults();
         if (max) matches = matches.splice(0, max);
 

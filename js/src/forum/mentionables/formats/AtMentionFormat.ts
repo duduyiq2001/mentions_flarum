@@ -3,9 +3,9 @@ import type MentionableModel from '../MentionableModel';
 import UserMention from '../UserMention';
 import PostMention from '../PostMention';
 import GroupMention from '../GroupMention';
-import WorkflowMention from '../WorkflowMention';
+import ResourceMention from '../ResourceMention';
 export default class AtMentionFormat extends MentionFormat {
-  public mentionables: (new (...args: any[]) => MentionableModel)[] = [UserMention, PostMention, GroupMention, WorkflowMention];
+  public mentionables: (new (...args: any[]) => MentionableModel)[] = [UserMention, PostMention, GroupMention, ResourceMention];
   protected extendable: boolean = true;
 
   public trigger(): string {

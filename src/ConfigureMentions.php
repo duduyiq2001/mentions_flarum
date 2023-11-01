@@ -70,7 +70,7 @@ class ConfigureMentions
         $tagName = 'WORKFLOWMENTION';
         $tag = $Config->tags->add($tagName);
         $tag->template = '
-        <a href="http://localhost:8080/workflow/{@id1}/wdwd">
+        <a href="http://localhost:8080/workflow/{@id1}">
             <xsl:value-of select="."/>
         </a>';
         $tag->attributes->add('id1')->filterChain->append('#uint');
@@ -87,7 +87,7 @@ class ConfigureMentions
         $tagName = 'PROJECTMENTION';
         $tag = $Config->tags->add($tagName);
         $tag->template = '
-        <a href="http://localhost:8080/user-project/{@id1}/wdwd">
+        <a href="http://localhost:8080/user-project/{@id1}">
             <xsl:value-of select="."/>
         </a>';
     $Config->Preg->match(self::PROJECT_REGEX, $tagName);
