@@ -19,6 +19,7 @@ use Flarum\Approval\Event\PostWasApproved;
 use Flarum\Extend;
 use Flarum\Group\Group;
 use Flarum\Mentions\Api\LoadMentionedByRelationship;
+use Flarum\Mentions\Api\ShowWorkflowController;
 use Flarum\Post\Event\Deleted;
 use Flarum\Post\Event\Hidden;
 use Flarum\Post\Event\Posted;
@@ -29,6 +30,7 @@ use Flarum\Post\Post;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
+use WorkflowSerializer;
 
 return [
     (new Extend\Frontend('forum'))
@@ -145,4 +147,6 @@ return [
             (new Extend\ApiController(Controller\ListPostsController::class))
                 ->load(['mentionsTags']),
         ]),
+        (new Extend\Routes('api'))
+        ->get('/workflow', 'workflow.name',ShowWorkflowController::class)
 ];
